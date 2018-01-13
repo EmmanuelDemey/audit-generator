@@ -27,7 +27,7 @@ func createFile(path string) {
 		defer file.Close()
 
 		if err != nil {
-			panic("bouh")
+			panic("Error when creatng the file")
 		}
 
 	}
