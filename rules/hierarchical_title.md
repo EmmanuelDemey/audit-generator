@@ -1,0 +1,3 @@
+# Hierarchical Titles
+
+Your page should have hierarchical titles. h1 should be followed by h2, that should be followed by h3, ...

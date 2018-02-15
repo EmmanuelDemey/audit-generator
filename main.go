@@ -18,6 +18,7 @@ const (
 	PERFORMANCE   = "PERFORMANCE"
 	QUALITY   = "QUALITY"
 	WEB   = "WEB"
+	SECURITY   = "SECURITY"
 )
 
 func createFile(path string) {
@@ -96,6 +97,11 @@ func main() {
 	rules := []Rule{
 		{id: "lang_attribute", path: "lang_attribute.md", tags: []string{ACCESSIBILITY, WEB}},
 		{id: "prettier", path: "prettier.md", tags: []string{QUALITY, WEB}},
+		{id: "retire", path: "retire.md", tags: []string{QUALITY, WEB, SECURITY}},
+		{id: "one_h1", path: "one_h1.md", tags: []string{QUALITY, WEB, ACCESSIBILITY}},
+		{id: "rel_noopener", path: "rel_noopener.md", tags: []string{QUALITY, WEB, SECURITY}},
+		{id: "search_input", path: "search_input.md", tags: []string{QUALITY, WEB, ACCESSIBILITY}},
+		{id: "hierarchical_title", path: "hierarchical_title.md", tags: []string{QUALITY, WEB, ACCESSIBILITY}},
 	}
 
 	filteredRules := Filter(rules, func(rule Rule) bool {
