@@ -16,9 +16,10 @@ type Rule struct {
 const (
 	ACCESSIBILITY = "ACCESSIBILITY"
 	PERFORMANCE   = "PERFORMANCE"
-	QUALITY   = "QUALITY"
-	WEB   = "WEB"
-	SECURITY   = "SECURITY"
+	QUALITY       = "QUALITY"
+	WEB           = "WEB"
+	SECURITY      = "SECURITY"
+	ELASTICSEARCH = "ELASTICSEARCH"
 )
 
 func createFile(path string) {
@@ -39,15 +40,14 @@ func createFile(path string) {
 	fmt.Println("==> done creating file", path)
 }
 
-	
 func Filter(vs []Rule, f func(Rule) bool) []Rule {
-    vsf := make([]Rule, 0)
-    for _, v := range vs {
-        if f(v) {
-            vsf = append(vsf, v)
-        }
-    }
-    return vsf
+	vsf := make([]Rule, 0)
+	for _, v := range vs {
+		if f(v) {
+			vsf = append(vsf, v)
+		}
+	}
+	return vsf
 }
 
 func Contain(ruleTag string, tags []string) bool {
@@ -60,33 +60,32 @@ func Contain(ruleTag string, tags []string) bool {
 }
 
 func Contains(ruleTags []string, tags []string) bool {
-	
 	for _, tag := range ruleTags {
-		if !Contain(tag, tags){
-			return false
+		if Contain(tag, tags) {
+			return true
 		}
 	}
-	return true
+	return false
 }
 
 func main() {
 
 	var pathDir string
 	var tags []string
-	
+
 	for i, option := range os.Args[0:] {
 		switch option {
-		case "-r": 
-		pathDir = os.Args[i+1]
-			break;
+		case "-r":
+			pathDir = os.Args[i+1]
+			break
 		case "-t":
 			tags = strings.Split(os.Args[i+1], ",")
 			break
-		default: 
-			break;
+		default:
+			break
 		}
-	}		
-	
+	}
+
 	if pathDir == "" {
 		panic("You should define the path of the generated audit report file")
 	}
@@ -102,20 +101,29 @@ func main() {
 		{id: "rel_noopener", path: "rel_noopener.md", tags: []string{QUALITY, WEB, SECURITY}},
 		{id: "search_input", path: "search_input.md", tags: []string{QUALITY, WEB, ACCESSIBILITY}},
 		{id: "hierarchical_title", path: "hierarchical_title.md", tags: []string{QUALITY, WEB, ACCESSIBILITY}},
+
+		{id: "cluster_name", path: "elasticsearch/cluster_name.md", tags: []string{ELASTICSEARCH}},
+		{id: "data_folders", path: "elasticsearch/data_folders.md", tags: []string{ELASTICSEARCH}},
+		{id: "delete_all", path: "elasticsearch/delete_all.md", tags: []string{ELASTICSEARCH}},
+		{id: "disable_swapping", path: "elasticsearch/disable_swapping.md", tags: []string{ELASTICSEARCH}},
+		{id: "es_heap_size", path: "elasticsearch/es_heap_size.md", tags: []string{ELASTICSEARCH}},
+		{id: "improve_bulk", path: "elasticsearch/improve_bulk.md", tags: []string{ELASTICSEARCH}},
+		{id: "node_name", path: "elasticsearch/node_name.md", tags: []string{ELASTICSEARCH}},
+		{id: "shard_size", path: "elasticsearch/shard_size.md", tags: []string{ELASTICSEARCH}},
+		{id: "split_brain", path: "elasticsearch/split_brain.md", tags: []string{ELASTICSEARCH}},
 	}
 
 	filteredRules := Filter(rules, func(rule Rule) bool {
 		return Contains(rule.tags, tags)
 	})
-
-	path := pathDir  + "/checklist.md"
+	path := pathDir + "/checklist.md"
 	createFile(path)
 	file, _ := os.OpenFile(path, os.O_RDWR, 0644)
 	defer file.Close()
 
 	for _, rule := range filteredRules {
 
-		dat, err := ioutil.ReadFile("/home/manu/Documents/workspaces/golang/src/generator/rules/" + rule.path)
+		dat, err := ioutil.ReadFile("/Users/emmanueldemey/Documents/workspaces/oss/audit-generator/rules/" + rule.path)
 		if err != nil {
 			panic(err)
 		}
